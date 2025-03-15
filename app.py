@@ -1,12 +1,17 @@
 import os
 import logging
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import text
 
-logging.basicConfig(level=logging.DEBUG)
+# Set up detailed logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+)
+logger = logging.getLogger(__name__)
 
 class Base(DeclarativeBase):
     pass
@@ -29,16 +34,18 @@ def create_app():
     # Error handlers
     @app.errorhandler(500)
     def internal_error(error):
-        logging.error(f"Internal Server Error: {str(error)}")
+        logger.exception("An internal error occurred")
         return jsonify(error=str(error)), 500
 
     @app.errorhandler(404)
     def not_found_error(error):
+        logger.error(f"Page not found: {request.url}")
         return jsonify(error="Resource not found"), 404
 
     # Get database URL from environment, fail if not set
     database_url = os.environ.get("DATABASE_URL")
     if not database_url:
+        logger.error("DATABASE_URL environment variable must be set")
         raise ValueError("DATABASE_URL environment variable must be set")
 
     # Configure Flask app
@@ -52,10 +59,17 @@ def create_app():
         }
     )
 
+    logger.info("Application configuration loaded successfully")
+
     # Initialize extensions
-    db.init_app(app)
-    login_manager.init_app(app)
-    login_manager.login_view = 'main.login'
+    try:
+        db.init_app(app)
+        login_manager.init_app(app)
+        login_manager.login_view = 'main.login'
+        logger.info("Flask extensions initialized successfully")
+    except Exception as e:
+        logger.exception("Failed to initialize Flask extensions")
+        raise
 
     with app.app_context():
         # Import models here to avoid circular imports
@@ -64,7 +78,7 @@ def create_app():
         try:
             # Create tables if they don't exist
             db.create_all()
-            logging.info("Database tables created successfully")
+            logger.info("Database tables created successfully")
 
             # Create admin user if it doesn't exist
             if not User.query.filter_by(username='admin').first():
@@ -72,22 +86,27 @@ def create_app():
                 admin.set_password('admin')
                 db.session.add(admin)
                 db.session.commit()
-                logging.info("Admin user created successfully")
+                logger.info("Admin user created successfully")
 
         except Exception as e:
-            logging.error(f"Database initialization error: {str(e)}")
+            logger.exception("Database initialization error")
             raise
 
         # Test database connection
         try:
             db.session.execute(text('SELECT 1'))
-            logging.info("Database connection test successful")
+            logger.info("Database connection test successful")
         except Exception as e:
-            logging.error(f"Database connection test failed: {str(e)}")
+            logger.exception("Database connection test failed")
             raise
 
         # Import and register blueprints
-        from routes import main as main_blueprint
-        app.register_blueprint(main_blueprint)
+        try:
+            from routes import main as main_blueprint
+            app.register_blueprint(main_blueprint)
+            logger.info("Blueprints registered successfully")
+        except Exception as e:
+            logger.exception("Failed to register blueprints")
+            raise
 
     return app
