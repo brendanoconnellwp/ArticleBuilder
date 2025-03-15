@@ -6,7 +6,7 @@
     <div class="col-md-6 col-lg-4">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title text-center mb-4">Login</h2>
+                <h2 class="card-title text-center mb-4">Register</h2>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -26,9 +26,8 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <a href="{{ url_for('register') }}" class="btn btn-outline-secondary">Register</a>
-                        <a href="{{ url_for('forgot_password') }}" class="btn btn-link">Forgot Password?</a>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <a href="{{ url_for('login') }}" class="btn btn-link">Already have an account? Login</a>
                     </div>
                 </form>
             </div>

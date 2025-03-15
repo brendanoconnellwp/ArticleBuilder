@@ -19,8 +19,36 @@ def login():
         if user and user.check_password(request.form['password']):
             login_user(user)
             return redirect(url_for('dashboard'))
-        flash('Invalid username or password')
+        flash('Invalid username or password', 'error')
     return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        if User.query.filter_by(username=request.form['username']).first():
+            flash('Username already exists', 'error')
+        else:
+            user = User(username=request.form['username'])
+            user.set_password(request.form['password'])
+            db.session.add(user)
+            db.session.commit()
+            login_user(user)
+            return redirect(url_for('dashboard'))
+    return render_template('register.html')
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        user = User.query.filter_by(username=request.form['username']).first()
+        if user:
+            # Here you would typically send an email with reset link
+            # For demo, we'll just reset to a default password
+            user.set_password('temporary')
+            db.session.commit()
+            flash('Password has been reset to: temporary', 'success')
+            return redirect(url_for('login'))
+        flash('Username not found', 'error')
+    return render_template('forgot_password.html')
 
 @app.route('/logout')
 @login_required
