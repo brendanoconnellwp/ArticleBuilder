@@ -25,8 +25,13 @@ def create_app():
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         return response
 
+    # Get database URL from environment, fail if not set
+    database_url = os.environ.get("DATABASE_URL")
+    if not database_url:
+        raise ValueError("DATABASE_URL environment variable must be set")
+
     app.secret_key = os.environ.get("SESSION_SECRET", "dev-key-please-change")
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///instance/articles.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
         "pool_recycle": 300,
@@ -35,18 +40,29 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'main.login'
 
     with app.app_context():
+        # Import models here to avoid circular imports
         from models import User, APIKey, Article
-        db.create_all()
 
-        # Create admin user if it doesn't exist
-        if not User.query.filter_by(username='admin').first():
-            admin = User(username='admin', is_admin=True)
-            admin.set_password('admin')
-            db.session.add(admin)
-            db.session.commit()
+        try:
+            # Attempt to create tables
+            db.create_all()
 
-        import routes
+            # Create admin user if it doesn't exist
+            if not User.query.filter_by(username='admin').first():
+                admin = User(username='admin', is_admin=True)
+                admin.set_password('admin')
+                db.session.add(admin)
+                db.session.commit()
+                logging.info("Admin user created successfully")
+        except Exception as e:
+            logging.error(f"Database initialization error: {str(e)}")
+            raise
+
+        # Import and register blueprints
+        from routes import main as main_blueprint
+        app.register_blueprint(main_blueprint)
+
         return app
