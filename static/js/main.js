@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function setTheme(theme) {
         document.documentElement.setAttribute('data-bs-theme', theme);
-        themeStylesheet.href = `https://cdn.replit.com/agent/bootstrap-agent-${theme}-theme.min.css`;
+        themeStylesheet.href = theme === 'dark' 
+            ? 'https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css'
+            : 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
         icon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
     }
     // Handle article generation
