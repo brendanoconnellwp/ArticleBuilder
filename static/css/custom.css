@@ -1,0 +1,43 @@
+/* Additional custom styles */
+.card {
+    margin-bottom: 1.5rem;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.status-cell {
+    text-transform: capitalize;
+}
+
+/* Status colors */
+.status-cell:contains('completed') {
+    color: var(--bs-success);
+}
+
+.status-cell:contains('failed') {
+    color: var(--bs-danger);
+}
+
+.status-cell:contains('processing') {
+    color: var(--bs-warning);
+}
+
+/* Modal improvements */
+.modal-content {
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+}
+
+#articleContent {
+    white-space: pre-wrap;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Form improvements */
+.form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}

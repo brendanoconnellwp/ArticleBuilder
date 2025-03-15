@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>API Settings</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">OpenAI API Key</h5>
+                <form id="openaiForm" class="api-key-form">
+                    <div class="mb-3">
+                        <label for="openaiKey" class="form-label">API Key</label>
+                        <input type="password" class="form-control" id="openaiKey" name="key" required
+                            value="{{ api_keys|selectattr('service', 'equalto', 'openai')|map(attribute='key')|first or '' }}">
+                        <input type="hidden" name="service" value="openai">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update OpenAI Key</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Anthropic API Key</h5>
+                <form id="anthropicForm" class="api-key-form">
+                    <div class="mb-3">
+                        <label for="anthropicKey" class="form-label">API Key</label>
+                        <input type="password" class="form-control" id="anthropicKey" name="key" required
+                            value="{{ api_keys|selectattr('service', 'equalto', 'anthropic')|map(attribute='key')|first or '' }}">
+                        <input type="hidden" name="service" value="anthropic">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Anthropic Key</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
