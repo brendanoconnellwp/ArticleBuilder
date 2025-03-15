@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.setAttribute('data-bs-theme', theme);
         themeStylesheet.href = theme === 'dark' 
             ? 'https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css'
-            : 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
+            : 'https://cdn.replit.com/agent/bootstrap-agent-light-theme-purple.min.css';
         icon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
     }
     // Handle article generation
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
+    
     // Handle article view modal
     document.querySelectorAll('.view-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('articleContent').innerHTML = content.replace(/\n/g, '<br>');
         });
     });
-
+    
     // Handle API key forms
     document.querySelectorAll('.api-key-form').forEach(form => {
         form.addEventListener('submit', async function(e) {
