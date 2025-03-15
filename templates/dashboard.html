@@ -8,10 +8,25 @@
 </div>
 
 <div class="row mb-4">
-    <div class="col">
+    <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Upload Titles</h5>
+                <h5 class="card-title">Add Single Title</h5>
+                <form action="{{ url_for('add_title') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Article Title</label>
+                        <textarea class="form-control" id="title" name="titles" rows="3" placeholder="Enter article title here&#10;Or paste multiple titles, one per line" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Title(s)</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Bulk Upload Titles</h5>
                 <form action="{{ url_for('upload_titles') }}" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="file" class="form-label">CSV File with Titles</label>
