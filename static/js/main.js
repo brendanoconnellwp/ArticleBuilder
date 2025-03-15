@@ -1,4 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeStylesheet = document.getElementById('theme-stylesheet');
+    const icon = themeToggle.querySelector('i');
+    
+    // Check saved preference or default to dark
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(currentTheme);
+    
+    themeToggle.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+    
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-bs-theme', theme);
+        themeStylesheet.href = `https://cdn.replit.com/agent/bootstrap-agent-${theme}-theme.min.css`;
+        icon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+    }
     // Handle article generation
     document.querySelectorAll('.generate-btn').forEach(button => {
         button.addEventListener('click', async function() {
