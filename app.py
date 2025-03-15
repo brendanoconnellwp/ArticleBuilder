@@ -33,5 +33,16 @@ login_manager.login_view = 'login'
 with app.app_context():
     # Import models here to avoid circular imports
     from models import User, APIKey, Article
+
+    # Drop all tables and recreate them
+    db.drop_all()
     db.create_all()
-    import routes  # Import routes after models and db creation
+
+    # Create admin user if it doesn't exist
+    admin = User(username='admin', is_admin=True)
+    admin.set_password('admin')
+    db.session.add(admin)
+    db.session.commit()
+
+    # Import routes after database initialization
+    import routes
