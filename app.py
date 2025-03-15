@@ -80,14 +80,6 @@ def create_app():
             db.create_all()
             logger.info("Database tables created successfully")
 
-            # Create admin user if it doesn't exist
-            if not User.query.filter_by(username='admin').first():
-                admin = User(username='admin', is_admin=True)
-                admin.set_password('admin')
-                db.session.add(admin)
-                db.session.commit()
-                logger.info("Admin user created successfully")
-
         except Exception as e:
             logger.exception("Database initialization error")
             raise

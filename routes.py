@@ -1,7 +1,7 @@
 import csv
 import io
 from datetime import datetime
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash
 from models import User, APIKey, Article
@@ -28,15 +28,40 @@ def login():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        if User.query.filter_by(username=request.form['username']).first():
-            flash('Username already exists', 'error')
-        else:
-            user = User(username=request.form['username'])
-            user.set_password(request.form['password'])
+        try:
+            username = request.form.get('username')
+            password = request.form.get('password')
+
+            if not username or not password:
+                flash('Username and password are required', 'error')
+                return render_template('register.html')
+
+            # Check password strength
+            if len(password) < 8:
+                flash('Password must be at least 8 characters long', 'error')
+                return render_template('register.html')
+
+            # Check if username exists
+            if User.query.filter_by(username=username).first():
+                flash('Username already exists', 'error')
+                return render_template('register.html')
+
+            # Create new user
+            user = User(username=username)
+            user.set_password(password)
             db.session.add(user)
             db.session.commit()
+
             login_user(user)
+            flash('Registration successful!', 'success')
             return redirect(url_for('main.dashboard'))
+
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Registration error: {str(e)}")
+            flash('An error occurred during registration', 'error')
+            return render_template('register.html')
+
     return render_template('register.html')
 
 @main.route('/forgot-password', methods=['GET', 'POST'])
