@@ -11,7 +11,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('dashboard') }}">Article Generator</a>
+            <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">Article Generator</a>
             {% if current_user.is_authenticated %}
             <button id="theme-toggle" class="btn btn-outline-light me-2">
                 <i class="bi bi-moon-fill"></i>
@@ -22,15 +22,15 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                        <a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a>
                     </li>
                     {% if current_user.is_admin %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('settings') }}">Settings</a>
+                        <a class="nav-link" href="{{ url_for('main.settings') }}">Settings</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
                     </li>
                 </ul>
             </div>

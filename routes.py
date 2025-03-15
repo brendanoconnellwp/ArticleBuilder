@@ -186,11 +186,3 @@ def article_status(article_id):
         'status': article.status,
         'error': article.error if article.error else None
     })
-
-# Initialize admin user if not exists
-with app.app_context():
-    if not User.query.filter_by(username='admin').first():
-        admin = User(username='admin', is_admin=True)
-        admin.set_password('admin')
-        db.session.add(admin)
-        db.session.commit()

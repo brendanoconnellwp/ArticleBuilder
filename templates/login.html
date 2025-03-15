@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -16,7 +15,7 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                <form method="POST">
+                <form method="POST" action="{{ url_for('main.login') }}">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -27,8 +26,8 @@
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Login</button>
-                        <a href="{{ url_for('register') }}" class="btn btn-outline-secondary">Register</a>
-                        <a href="{{ url_for('forgot_password') }}" class="btn btn-link">Forgot Password?</a>
+                        <a href="{{ url_for('main.register') }}" class="btn btn-outline-secondary">Register</a>
+                        <a href="{{ url_for('main.forgot_password') }}" class="btn btn-link">Forgot Password?</a>
                     </div>
                 </form>
             </div>
