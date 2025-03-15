@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Theme toggle functionality
     const themeToggle = document.getElementById('theme-toggle');
     const themeStylesheet = document.getElementById('theme-stylesheet');
-    const icon = themeToggle.querySelector('i');
+    const icon = themeToggle?.querySelector('i');
 
     // Check saved preference or default to dark
     const currentTheme = localStorage.getItem('theme') || 'dark';
@@ -16,10 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setTheme(theme) {
         document.documentElement.setAttribute('data-bs-theme', theme);
-        themeStylesheet.href = theme === 'dark' 
-            ? 'https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css'
-            : 'https://cdn.replit.com/agent/bootstrap-agent-light-theme-purple.min.css';
-        icon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+        if (theme === 'dark') {
+            themeStylesheet.href = 'https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css';
+            icon.className = 'bi bi-moon-fill';
+        } else {
+            themeStylesheet.href = 'https://cdn.replit.com/agent/bootstrap-agent-light-theme-purple.min.css';
+            icon.className = 'bi bi-sun-fill';
+        }
     }
 
     // Handle article generation
